@@ -9,7 +9,7 @@ function collect(value, output, depth = 0) {
     output.push(value);
     for (const [key, v] of Object.entries(value)) {
       if (["content", "structuredContent", "data", "list", "items", "foods",
-        "result", "results", "nutrition", "nutritionInfo", "foodList"].includes(key)) {
+        "result", "results", "text", "nutrition", "nutritionInfo", "foodList"].includes(key)) {
         collect(v, output, depth + 1);
       }
     }
