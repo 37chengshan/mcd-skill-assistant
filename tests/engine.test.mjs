@@ -50,3 +50,13 @@ test("normalizes explicit kJ and kcal, never bare ambiguous energy", () => {
 test("results are deterministic", () => {
   assert.deepEqual(optimize(data, { budget: 50 }), optimize(data, { budget: 50 }));
 });
+
+test("evaluates outstanding items even when live response has more than 28 rows", () => {
+  const many=Array.from({length:40}, (_,i)=>({
+    id:String(i), name:"ordinary"+i, calories:300, protein:3, price:18
+  }));
+  many.push({id:"late",name:"late-high-protein",calories:280,protein:70,price:20});
+  const result=optimize(many,{maxItems:1,minProtein:65,maxCalories:400,budget:30});
+  assert.equal(result.inspectedSize,41);
+  assert.ok(result.plans.some(p=>p.foods.includes("late-high-protein")));
+});
