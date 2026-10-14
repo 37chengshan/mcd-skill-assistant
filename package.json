@@ -11,7 +11,8 @@
     "test": "node --test",
     "demo": "node src/cli.mjs demo",
     "live": "node src/cli.mjs live",
-    "check": "node --check src/cli.mjs && node --check docs/engine.mjs && node --check docs/app.mjs && node --test"
+    "check": "node --check src/cli.mjs && node --check src/mcp.mjs && node --check src/preview.mjs && node --check src/normalize.mjs && node --check docs/engine.mjs && node --check docs/app.mjs && node --test",
+    "preview": "node src/preview.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/client": "^2.0.0"
