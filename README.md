@@ -27,10 +27,10 @@ cd mcd-skill-assistant
 npm install
 npm run demo
 npm test
-npx serve docs
+npm run preview
 ~~~
 
-然后在终端显示的本地地址打开网页。页面所有食品与价格都是**明确标注的虚构样例**，方便无 Token 的评委立即体验。
+然后在浏览器打开 http://127.0.0.1:4173 。页面所有食品与价格都是**明确标注的虚构样例**，方便无 Token 的评委立即体验。
 
 ## 🔌 真正连接麦当劳 MCP
 
