@@ -1,5 +1,5 @@
 import { optimize } from "./engine.mjs";
-import { comparePlans, explainPlan, rescueConstraints } from "./lab.mjs";
+import { comparePlans, explainPlan, rescueConstraints, scenarioSummary } from "./lab.mjs";
 // All food names and numbers on this page are deliberately fictional.
 const foods=[
 {id:"a",name:"香煎鸡肉堡",calories:360,protein:24,price:22},
@@ -107,6 +107,25 @@ function planCard(plan){
  });
  actions.append(copy,choice);item.append(actions);return item;
 }
+function renderScenario(){
+ const mode=settings.goal==="save"?"protein":"save";
+ const nextLabel=mode==="save"?"更省一点":"更有料";
+ const scenario=scenarioSummary(foods,{goal:settings.goal,budget:settings.budget,
+   maxCalories:settings.calories,minProtein:settings.protein,excludeIds:[...exclusions]});
+ const area=$("scenarioContent");area.replaceChildren();
+ $("tryScenario").textContent="试试“"+nextLabel+"” →";
+ $("tryScenario").dataset.nextGoal=mode;
+ const original=scenario.baseline.plans[0],alternate=scenario.alternate.plans[0];
+ if(!original||!alternate) {
+   area.append(node("p","","这次还没有另一种合适的搭配。换个条件，再来看看。"));
+   $("tryScenario").disabled=true;
+   return;
+ }
+ $("tryScenario").disabled=false;
+ area.append(node("strong","",alternate.foods.join(" + ")));
+ const difference=comparePlans(original,alternate);
+ area.append(node("p","","如果更在意“"+nextLabel+"”，你可以考虑这份。"+difference.narrative+"。"));
+}
 function render(){
  $("budgetValue").textContent="¥"+settings.budget;
  $("caloriesValue").textContent=settings.calories+" 千卡";
@@ -144,6 +163,7 @@ function render(){
  more.classList.toggle("hide",result.plans.length<=3);
  more.textContent=expanded?"收起其他搭配 ↑":"再看看其他搭配 ↓";
  comparePanel();
+ renderScenario();
  $("announce").textContent="找到 "+result.frontierSize+" 种可选搭配";
 }
 document.querySelectorAll("[data-goal]").forEach(b=>b.addEventListener("click",()=>{
@@ -161,6 +181,12 @@ $("surprise").addEventListener("click",()=>{
  expanded=true;render();
  const winner=[...document.querySelectorAll(".meal-card")].find(x=>x.dataset.planKey===luckyKey);
  if(winner){winner.setAttribute("tabindex","-1");winner.focus({preventScroll:true});winner.scrollIntoView({behavior:"smooth",block:"center"});}
+});
+$("tryScenario").addEventListener("click",()=>{
+ settings.goal=$("tryScenario").dataset.nextGoal;
+ selected.clear();luckyKey=null;expanded=false;render();
+ $("scenarioTitle").focus?.({preventScroll:true});
+ document.getElementById("cards").scrollIntoView({behavior:"smooth",block:"start"});
 });
 $("reset").addEventListener("click",()=>{
  Object.assign(settings,defaultSettings);exclusions.clear();selected.clear();expanded=false;luckyKey=null;render();
