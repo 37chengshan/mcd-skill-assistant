@@ -17,17 +17,17 @@ jobs:
   readiness:
     runs-on: ubuntu-latest
     outputs:
-      enabled: \${{ steps.status.outputs.enabled }}
+      enabled: ${{ steps.status.outputs.enabled }}
     steps:
       - name: Check whether GitHub Pages is configured
         id: status
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           response=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
-            --header "Authorization: Bearer \${GH_TOKEN}" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
             --header 'Accept: application/vnd.github+json' \
-            "https://api.github.com/repos/\${{ github.repository }}/pages")
+            "https://api.github.com/repos/${{ github.repository }}/pages")
           if [ "$response" = "200" ]; then
             echo 'enabled=true' >> "$GITHUB_OUTPUT"
           else
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
