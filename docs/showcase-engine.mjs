@@ -34,7 +34,7 @@ export function createShowcase(menu){
   const provenance="以下数字仅为虚构演示，不代表真实菜单、价格或门店服务。";
   const chapters=[
    {id:"nutrition",title:"从餐品资料开始",eyebrow:"第一站 · 数据边界",
-    summary:"把餐品营养信息整理成干净的本地资料。这里没有实时价格，也不会夹带私人账号信息。",
+    summary:"把餐品营养信息整理成干净的本地资料。价格未知，不会编造实时售价，也不会夹带私人账号信息。",
     highlights:[cleaned.foods.length+" 种示例餐品","价格未知 · 不会编造"],
     href:"./index.html",button:"打开单人挑选",provenance},
    {id:"group",title:"朋友们一起选",eyebrow:"第二站 · 朋友相聚",
