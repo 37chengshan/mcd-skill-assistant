@@ -7,9 +7,9 @@ const scenes=new Set(["solo","group","week"]);
 const goals=new Set(["balanced","save","protein","light"]);
 function valid(p){
  return p&&typeof p==="object"&&scenes.has(p.scene)&&goals.has(p.goal)&&
- Number.isInteger(p.budget)&&p.budget>=15&&p.budget<=90&&
+ Number.isInteger(p.budget)&&p.budget>=15&&p.budget<=80&&
  Number.isInteger(p.maxCalories)&&p.maxCalories>=200&&p.maxCalories<=1500&&
- Number.isInteger(p.minProtein)&&p.minProtein>=0&&p.minProtein<=75&&
+ Number.isInteger(p.minProtein)&&p.minProtein>=0&&p.minProtein<=70&&
  Number.isInteger(p.variety)&&p.variety>=0&&p.variety<=100&&
  Number.isInteger(p.guests)&&p.guests>=2&&p.guests<=6;
 }

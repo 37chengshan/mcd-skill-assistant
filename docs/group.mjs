@@ -14,6 +14,19 @@ const presets=groupPresets();
 const $=id=>document.getElementById(id);
 let budget=presets[0].groupBudget;
 let people=structuredClone(presets[0].guests);
+let guided=false;
+const guidedParams=new URLSearchParams(window.location.search);
+if(guidedParams.has("g")){
+ const num=Number(guidedParams.get("g")),per=Number(guidedParams.get("b"));
+ const cal=Number(guidedParams.get("c")),pro=Number(guidedParams.get("p")),m=guidedParams.get("m");
+ if(Number.isInteger(num)&&num>=2&&num<=6&&Number.isInteger(per)&&per>=15&&per<=80&&
+   Number.isInteger(cal)&&cal>=200&&cal<=1500&&Number.isInteger(pro)&&pro>=0&&pro<=70&&
+   ["balanced","save","protein","light"].includes(m)){
+  people=Array.from({length:num},(_,i)=>({id:"guided"+i,name:i?"朋友 "+i:"我",
+   budget:per,maxCalories:cal,minProtein:pro,goal:m,excludeIds:[]}));
+  budget=per*num;guided=true;
+ }
+}
 let last=null;
 const make=(tag,cls,text)=>{
  const el=document.createElement(tag);if(cls)el.className=cls;
@@ -150,4 +163,4 @@ $("generate").addEventListener("click",()=>{
  renderResult();
  if(innerWidth<=800)document.getElementById("results-title").scrollIntoView({behavior:"smooth",block:"start"});
 });
-renderForm();renderPresetButtons(0);renderResult();
+renderForm();renderPresetButtons(guided?-1:0);renderResult();

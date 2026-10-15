@@ -12,6 +12,17 @@ const menu=[
 ];
 const $=id=>document.getElementById(id),presets=weekPresets();
 let settings={...presets[0].options},current=null,replacements=[];
+const guidedParams=new URLSearchParams(window.location.search);
+let guided=false;
+if(guidedParams.has("b")){
+ const b=Number(guidedParams.get("b")),c=Number(guidedParams.get("c")),
+   p=Number(guidedParams.get("p")),v=Number(guidedParams.get("v")),m=guidedParams.get("m");
+ if(Number.isInteger(b)&&b>=20&&b<=80&&Number.isInteger(c)&&c>=200&&c<=1500&&
+   Number.isInteger(p)&&p>=0&&p<=70&&Number.isInteger(v)&&v>=0&&v<=100&&
+   ["balanced","save","protein","light"].includes(m)){
+  settings={budget:b,maxCalories:c,minProtein:p,variety:v,goal:m};guided=true;
+ }
+}
 const element=(tag,cls,text)=>{
  const e=document.createElement(tag);if(cls)e.className=cls;
  if(text!==undefined)e.textContent=text;return e;
@@ -97,9 +108,9 @@ function restore(){
   const saved=JSON.parse(raw);
   if(saved.version!==1||!saved.settings||!Array.isArray(saved.replacements)||saved.replacements.length>80)return;
   const s=saved.settings;
-  if(!Number.isInteger(s.budget)||s.budget<20||s.budget>75||
-    !Number.isInteger(s.maxCalories)||s.maxCalories<300||s.maxCalories>1200||
-    !Number.isInteger(s.minProtein)||s.minProtein<0||s.minProtein>60||
+  if(!Number.isInteger(s.budget)||s.budget<20||s.budget>80||
+    !Number.isInteger(s.maxCalories)||s.maxCalories<200||s.maxCalories>1500||
+    !Number.isInteger(s.minProtein)||s.minProtein<0||s.minProtein>70||
     !Number.isInteger(s.variety)||s.variety<0||s.variety>100||
     !["balanced","save","light","protein"].includes(s.goal))return;
   if(saved.replacements.some(x=>!Number.isInteger(x)||x<0||x>6))return;
@@ -139,6 +150,6 @@ for(const [id,key] of Object.entries({budget:"budget",calories:"maxCalories",pro
  });
  $(id).addEventListener("change",()=>{redrawPresets(-1);regenerate();});
 }
-restore();redrawControls();redrawPresets(-1);
+if(!guided)restore();redrawControls();redrawPresets(-1);
 if(!current)current=buildWeek(menu,options());
 show();

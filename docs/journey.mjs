@@ -53,9 +53,9 @@ function renderPrefs(slot){
   b.addEventListener("click",()=>{settings.goal=id;render();});moods.append(b);
  }slot.append(moods);
  const fields=create("div","fields");
- slider(fields,"budget",settings.scene==="group"?"每个人的参考预算":"每餐参考预算",15,90,1," 元");
+ slider(fields,"budget",settings.scene==="group"?"每个人的参考预算":"每餐参考预算",15,80,1," 元");
  slider(fields,"maxCalories","热量不超过",200,1500,50," 千卡");
- slider(fields,"minProtein","蛋白质至少",0,75,5," 克");
+ slider(fields,"minProtein","蛋白质至少",0,70,5," 克");
  if(settings.scene==="week")slider(fields,"variety","希望更多不同口味",0,100,10,"%");
  if(settings.scene==="group")slider(fields,"guests","一共几个人",2,6,1," 人");
  slot.append(fields);
@@ -120,9 +120,9 @@ try{
   const p=saved.settings;
   if(saved.version===1&&p&&["solo","group","week"].includes(p.scene)&&
    ["balanced","save","protein","light"].includes(p.goal)&&
-   Number.isInteger(p.budget)&&p.budget>=15&&p.budget<=90&&
+   Number.isInteger(p.budget)&&p.budget>=15&&p.budget<=80&&
    Number.isInteger(p.maxCalories)&&p.maxCalories>=200&&p.maxCalories<=1500&&
-   Number.isInteger(p.minProtein)&&p.minProtein>=0&&p.minProtein<=75&&
+   Number.isInteger(p.minProtein)&&p.minProtein>=0&&p.minProtein<=70&&
    Number.isInteger(p.variety)&&p.variety>=0&&p.variety<=100&&
    Number.isInteger(p.guests)&&p.guests>=2&&p.guests<=6&&
    Number.isInteger(saved.step)&&saved.step>=0&&saved.step<=2){
