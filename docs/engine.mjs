@@ -27,8 +27,12 @@ export function optimize(foods, options = {}) {
     (a, b) => (a.price ?? Infinity) - (b.price ?? Infinity),
     (a, b) => b.protein / (b.calories + 100) - a.protein / (a.calories + 100)
   ];
-  const shortlist = criteria.flatMap(compare => [...normalized].sort(compare).slice(0, 10));
-  const catalog = [...new Map(shortlist.map(item => [item.id, item])).values()].slice(0, 28);
+  const excluded=new Set(Array.isArray(options.excludeIds)?options.excludeIds.map(String):[]);
+  const usable=normalized.filter(item=>!excluded.has(item.id));
+  const shortlist=usable.length<=28 ? usable :
+    criteria.flatMap(compare=>[...usable].sort(compare).slice(0,10));
+  const catalog=[...new Map(shortlist.map(item=>[item.id,item])).values()].slice(0,28);
+  const approximate=usable.length>catalog.length;
   const candidates = [];
   function visit(start, chosen) {
     if (chosen.length) {
@@ -40,7 +44,10 @@ export function optimize(foods, options = {}) {
         (budget === null || (price !== null && price <= budget))) {
         candidates.push({
           foods: chosen.map(f => f.name), calories, protein, price,
-          score: protein * 3 - calories * 0.045 - (price ?? 0) * 0.8 + chosen.length * 1.5
+          score: (options.goal==="save" ? protein*1.6-calories*0.02-(price??0)*3 :
+            options.goal==="protein" ? protein*5-calories*0.04-(price??0)*0.4 :
+            options.goal==="light" ? protein*1.6-calories*0.14-(price??0)*0.3 :
+            protein*3-calories*0.045-(price??0)*0.8) + chosen.length*1.5
         });
       }
     }
@@ -68,7 +75,8 @@ export function optimize(foods, options = {}) {
         Math.round(p.calories) + "kcal" +
         (p.price === null ? " · 未提供实时价格" : " · 参考价格 ¥" + p.price.toFixed(1))
     })),
-    eligible: candidates.length, frontierSize: frontier.length, catalogSize: catalog.length, inspectedSize: normalized.length,
-    priceVerified: false, source: options.source || "illustrative"
+    eligible:candidates.length,frontierSize:frontier.length,catalogSize:catalog.length,inspectedSize:normalized.length,
+    approximate,excludedCount:normalized.length-usable.length,
+    priceVerified:false,source:options.source||"illustrative"
   };
 }
