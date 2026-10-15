@@ -1,5 +1,6 @@
 import { optimize } from "./engine.mjs";
 import { comparePlans, explainPlan, rescueConstraints, scenarioSummary } from "./lab.mjs";
+import { decodeChoices,encodeChoices } from "./share.mjs";
 // All food names and numbers on this page are deliberately fictional.
 const foods=[
 {id:"a",name:"香煎鸡肉堡",calories:360,protein:24,price:22},
@@ -13,8 +14,9 @@ const foods=[
 ];
 const $=id=>document.getElementById(id);
 const defaultSettings={goal:"balanced",budget:45,calories:850,protein:25};
-const settings={...defaultSettings};
-const exclusions=new Set(),selected=new Map();
+const initial=decodeChoices(window.location.search,foods.map(x=>x.id));
+const settings={goal:initial.goal,budget:initial.budget,calories:initial.calories,protein:initial.protein};
+const exclusions=new Set(initial.excludeIds),selected=new Map();
 let expanded=false,lastResults=[],luckyKey=null;
 const node=(tag,cls,content)=>{
  const el=document.createElement(tag);if(cls)el.className=cls;
@@ -188,7 +190,27 @@ $("tryScenario").addEventListener("click",()=>{
  $("scenarioTitle").focus?.({preventScroll:true});
  document.getElementById("cards").scrollIntoView({behavior:"smooth",block:"start"});
 });
+$("share").addEventListener("click",async()=>{
+ const url=new URL(window.location.href);
+ url.search=encodeChoices({...settings,excludeIds:[...exclusions]});
+ url.hash="";
+ const value=url.toString();
+ const panel=$("sharePanel"),input=$("shareUrl");
+ panel.classList.remove("hide");
+ input.value=value;
+ try{
+   if(!navigator.clipboard)throw Error("copy unavailable");
+   await navigator.clipboard.writeText(value);
+   $("share").textContent="✓ 已复制，可发给朋友";
+ }catch{
+   input.focus();input.select();
+   $("share").textContent="长按下方链接进行复制";
+ }
+});
 $("reset").addEventListener("click",()=>{
- Object.assign(settings,defaultSettings);exclusions.clear();selected.clear();expanded=false;luckyKey=null;render();
+ Object.assign(settings,defaultSettings);exclusions.clear();selected.clear();expanded=false;luckyKey=null;
+ $("sharePanel").classList.add("hide");
+ $("share").textContent="↗ 把我的选择分享出去";
+ render();
 });
 render();

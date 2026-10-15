@@ -15,6 +15,7 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 .quick-row{display:flex;align-items:center;flex-wrap:wrap;gap:11px;margin-top:15px}.surprise{padding:10px 13px;background:#ffc83d;border:1px solid #e4b127;border-radius:11px;font-size:12px;font-weight:850;color:#473405;box-shadow:0 3px 0 #e1af24;touch-action:manipulation}.surprise:hover{background:#ffd858}.small-help{font-size:11px;color:#8a806d}.meal-card.is-picked{border:2px solid #378059!important;box-shadow:0 6px 27px #34805529!important}.picked-label{border-radius:7px;background:#e9f4eb;color:#286347;padding:5px 9px;font-weight:900;font-size:11px;margin-top:12px;display:inline-block}
 .scenario-body{margin:13px 0;padding:15px;background:#f7f6ed;border:1px solid #e7e5d9;border-radius:11px}.scenario-body strong{font-size:14px;display:block}.scenario-body p{line-height:1.65;margin-top:5px}.scenario-action{display:inline-flex;background:#315a42;border:1px solid #315a42;color:#fff;border-radius:10px;padding:10px 13px;font-weight:800;font-size:12px;touch-action:manipulation}.scenario-action:hover{background:#244936}
+.share-btn{padding:10px 12px;border:1px solid #d8d2c2;border-radius:11px;background:#fff;color:#4b4537;font-size:12px;font-weight:850;touch-action:manipulation}.share-btn:hover{background:#f8f4e8}.share-panel{margin-top:12px;border-radius:10px;border:1px solid #d7e3d3;background:#f0f7ee;padding:11px;font-size:12px}.share-panel label{display:block;margin-bottom:5px;color:#385b3a}.share-panel input{width:100%;border:1px solid #d6dfd1;border-radius:6px;padding:8px;color:#263325;background:white;font-size:12px}
 </style>
 </head>
 <body>
@@ -39,7 +40,7 @@
 <div class="content">
 <section class="panel intro-panel" aria-labelledby="result-title">
 <div class="intro-head"><div><div class="section-number">02 · 挑到心仪搭配</div><h2 class="section-title" id="result-title">为你选出这几份</h2><p class="section-copy" style="margin:5px 0 0">从不同角度都值得考虑的搭配里挑，看看理由。</p></div><span class="count" id="planCount">正在挑选…</span></div>
-<div id="stats" class="result-stats"></div><div class="quick-row"><button id="surprise" type="button" class="surprise">🎲 帮我拍板，随机选一份</button><span class="small-help" id="surpriseMessage">还在犹豫？交给一点小运气。</span></div><div class="notice">体验提示：以下餐品名称、营养数字和价格均为演示内容，不代表麦当劳实际菜单或售价。</div>
+<div id="stats" class="result-stats"></div><div class="quick-row"><button id="surprise" type="button" class="surprise">🎲 帮我拍板，随机选一份</button><button type="button" id="share" class="share-btn">↗ 把我的选择分享出去</button><span class="small-help" id="surpriseMessage">还在犹豫？交给一点小运气。</span></div><div id="sharePanel" class="share-panel hide" role="status"><label for="shareUrl">复制下面的链接，就能把这些条件分享给朋友：</label><input id="shareUrl" type="text" readonly aria-label="你的分享链接"></div><div class="notice">体验提示：以下餐品名称、营养数字和价格均为演示内容，不代表麦当劳实际菜单或售价。</div>
 </section>
 <div id="cards" class="results" aria-label="搭配结果"></div>
 <button type="button" class="more-button hide" id="showMore">再看看其他搭配 ↓</button>
