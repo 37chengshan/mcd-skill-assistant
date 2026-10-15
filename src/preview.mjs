@@ -20,7 +20,10 @@ const allowed = new Map([
   ["/map-engine.mjs", ["map-engine.mjs", "text/javascript; charset=utf-8"]],
   ["/perk.html", ["perk.html", "text/html; charset=utf-8"]],
   ["/perk.mjs", ["perk.mjs", "text/javascript; charset=utf-8"]],
-  ["/perk-engine.mjs", ["perk-engine.mjs", "text/javascript; charset=utf-8"]]
+  ["/perk-engine.mjs", ["perk-engine.mjs", "text/javascript; charset=utf-8"]],
+  ["/journey.html", ["journey.html", "text/html; charset=utf-8"]],
+  ["/journey.mjs", ["journey.mjs", "text/javascript; charset=utf-8"]],
+  ["/journey-engine.mjs", ["journey-engine.mjs", "text/javascript; charset=utf-8"]]
 ]);
 const server = createServer(async (req, res) => {
   let pathname;
