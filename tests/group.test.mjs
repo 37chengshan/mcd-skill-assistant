@@ -36,7 +36,7 @@ test("unknown food prices are not assumed free",()=>{
  assert.equal(r.status,"price-unavailable");
 });
 test("individual conflicts explain whose conditions cannot be met",()=>{
- const guests2=[{id:"x",name:"小鱼",budget:8,maxCalories:100,minProtein:40,goal:"light",excludeIds:[]}];
+ const guests2=[{id:"x",name:"小鱼",budget:8,maxCalories:100,minProtein:40,goal:"light",excludeIds:[]},guests[0]];
  const r=planGroup(foods,guests2,{groupBudget:100});
  assert.equal(r.status,"no-options");
  assert.equal(r.blockedMembers[0],"小鱼");
