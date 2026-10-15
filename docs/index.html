@@ -13,6 +13,7 @@
 @media(max-width:800px){.workspace{grid-template-columns:1fr}.controls{position:relative;top:auto}.hero{grid-template-columns:1fr 130px;min-height:154px}.food-emoji{font-size:70px}.visual-circle{width:104px;height:104px}.visual-stamp{font-size:9px;right:-5px}.controls{padding:18px}.chooser{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.chooser button{padding:9px 7px;font-size:11px}.chooser button .desc{display:none}.field{margin:14px 0}.chips{gap:6px}.metric strong{font-size:17px}}
 @media(max-width:540px){.wrap{width:min(100% - 22px,1120px)}.topbar{height:56px}.top-actions{gap:8px}.nav-link{font-size:11px}.brand{font-size:15px}.sun{width:31px;height:31px}.hero{grid-template-columns:1fr 87px;padding:20px 0 18px}.hero h1{font-size:27px}.hero p{font-size:12px}.visual-circle{width:78px;height:78px}.food-emoji{font-size:56px}.visual-stamp{display:none}.intro-panel{padding:17px}.meal-card{padding:15px}.meal-card h3{font-size:15px}.metric{padding:9px 7px}.metric strong{font-size:15px}.metric span{font-size:10px}.why-lines{gap:4px}.why-line{font-size:9px;padding:3px 5px}.why-line strong{font-size:11px}.compare-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.quick-row{display:flex;align-items:center;flex-wrap:wrap;gap:11px;margin-top:15px}.surprise{padding:10px 13px;background:#ffc83d;border:1px solid #e4b127;border-radius:11px;font-size:12px;font-weight:850;color:#473405;box-shadow:0 3px 0 #e1af24;touch-action:manipulation}.surprise:hover{background:#ffd858}.small-help{font-size:11px;color:#8a806d}.meal-card.is-picked{border:2px solid #378059!important;box-shadow:0 6px 27px #34805529!important}.picked-label{border-radius:7px;background:#e9f4eb;color:#286347;padding:5px 9px;font-weight:900;font-size:11px;margin-top:12px;display:inline-block}
 </style>
 </head>
 <body>
@@ -37,7 +38,7 @@
 <div class="content">
 <section class="panel intro-panel" aria-labelledby="result-title">
 <div class="intro-head"><div><div class="section-number">02 · 挑到心仪搭配</div><h2 class="section-title" id="result-title">为你选出这几份</h2><p class="section-copy" style="margin:5px 0 0">从不同角度都值得考虑的搭配里挑，看看理由。</p></div><span class="count" id="planCount">正在挑选…</span></div>
-<div id="stats" class="result-stats"></div><div class="notice">体验提示：以下餐品名称、营养数字和价格均为演示内容，不代表麦当劳实际菜单或售价。</div>
+<div id="stats" class="result-stats"></div><div class="quick-row"><button id="surprise" type="button" class="surprise">🎲 帮我拍板，随机选一份</button><span class="small-help" id="surpriseMessage">还在犹豫？交给一点小运气。</span></div><div class="notice">体验提示：以下餐品名称、营养数字和价格均为演示内容，不代表麦当劳实际菜单或售价。</div>
 </section>
 <div id="cards" class="results" aria-label="搭配结果"></div>
 <button type="button" class="more-button hide" id="showMore">再看看其他搭配 ↓</button>

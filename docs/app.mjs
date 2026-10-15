@@ -15,7 +15,7 @@ const $=id=>document.getElementById(id);
 const defaultSettings={goal:"balanced",budget:45,calories:850,protein:25};
 const settings={...defaultSettings};
 const exclusions=new Set(),selected=new Map();
-let expanded=false,lastResults=[];
+let expanded=false,lastResults=[],luckyKey=null;
 const node=(tag,cls,content)=>{
  const el=document.createElement(tag);if(cls)el.className=cls;
  if(content!==undefined)el.textContent=content;return el;
@@ -36,9 +36,12 @@ function renderFilters(){
  const el=$("exclude");el.replaceChildren();
  for(const food of foods){
   const b=node("button","chip",food.name);b.type="button";b.setAttribute("aria-pressed",String(exclusions.has(food.id)));
+  b.dataset.foodId=food.id;
   b.addEventListener("click",()=>{
    if(exclusions.has(food.id))exclusions.delete(food.id);else exclusions.add(food.id);
-   selected.clear();expanded=false;render();
+   selected.clear();expanded=false;luckyKey=null;render();
+   const again=[...document.querySelectorAll("[data-food-id]")].find(x=>x.dataset.foodId===food.id);
+   if(again)again.focus({preventScroll:true});
   });
   el.append(b);
  }
@@ -67,6 +70,9 @@ function comparePanel(){
 }
 function planCard(plan){
  const item=node("article","meal-card");
+ const planKey=plan.foods.join("|");
+ item.dataset.planKey=planKey;
+ if(planKey===luckyKey){item.classList.add("is-picked");item.append(node("div","picked-label","🎉 好啦，就考虑这份！"));}
  const top=node("div","card-top");top.append(
   node("span","tag"+(plan.rank===1?" first":""),plan.rank===1?"✨ 优先推荐":"另一种好选择"),
   node("span","small","第 "+plan.rank+" 份"));
@@ -96,6 +102,8 @@ function planCard(plan){
   if(selected.has(key))selected.delete(key);
   else {if(selected.size>=2)selected.delete(selected.keys().next().value);selected.set(key,plan);}
   render();
+  const again=[...document.querySelectorAll(".meal-card")].find(x=>x.dataset.planKey===key);
+  const control=again?.querySelector(".compare-button");if(control)control.focus({preventScroll:true});
  });
  actions.append(copy,choice);item.append(actions);return item;
 }
@@ -107,6 +115,8 @@ function render(){
  renderGoals();renderFilters();
  const result=allPlans();lastResults=result.plans;
  $("planCount").textContent=result.frontierSize+" 种可选";
+ $("surprise").disabled=!result.plans.length;
+ $("surpriseMessage").textContent=luckyKey?"刚刚选好了！你也可以再抽一次。":"还在犹豫？交给一点小运气。";
  $("stats").replaceChildren(
   node("span","",result.eligible+" 种符合条件的搭配"),
   node("span","",result.frontierSize+" 种各有优点"),
@@ -137,13 +147,22 @@ function render(){
  $("announce").textContent="找到 "+result.frontierSize+" 种可选搭配";
 }
 document.querySelectorAll("[data-goal]").forEach(b=>b.addEventListener("click",()=>{
- settings.goal=b.dataset.goal;selected.clear();expanded=false;render();
+ settings.goal=b.dataset.goal;selected.clear();expanded=false;luckyKey=null;render();
 }));
 for(const id of ["budget","calories","protein"])$(id).addEventListener("input",()=>{
- settings[id]=Number($(id).value);selected.clear();expanded=false;render();
+ settings[id]=Number($(id).value);selected.clear();expanded=false;luckyKey=null;render();
 });
 $("showMore").addEventListener("click",()=>{expanded=!expanded;render();});
+$("surprise").addEventListener("click",()=>{
+ const alternatives=lastResults.slice(0,5).filter(p=>p.foods.join("|")!==luckyKey);
+ const pool=alternatives.length?alternatives:lastResults.slice(0,5);
+ if(!pool.length)return;
+ luckyKey=pool[Math.floor(Math.random()*pool.length)].foods.join("|");
+ expanded=true;render();
+ const winner=[...document.querySelectorAll(".meal-card")].find(x=>x.dataset.planKey===luckyKey);
+ if(winner){winner.setAttribute("tabindex","-1");winner.focus({preventScroll:true});winner.scrollIntoView({behavior:"smooth",block:"center"});}
+});
 $("reset").addEventListener("click",()=>{
- Object.assign(settings,defaultSettings);exclusions.clear();selected.clear();expanded=false;render();
+ Object.assign(settings,defaultSettings);exclusions.clear();selected.clear();expanded=false;luckyKey=null;render();
 });
 render();
