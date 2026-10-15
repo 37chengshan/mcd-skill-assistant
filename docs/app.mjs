@@ -142,6 +142,7 @@ function render(){
  $("budgetField").classList.toggle("hide",imported);
  $("share").disabled=imported;
  $("share").title=imported?"导入的资料只保留在你的电脑上，无法随链接一起分享。":"";
+ $("surpriseMessage").textContent=imported?"已使用本地餐品资料，价格未知。":"还在犹豫？交给一点小运气。";
  $("caloriesValue").textContent=settings.calories+" 千卡";
  $("proteinValue").textContent=settings.protein+" 克";
  for(const id of ["budget","calories","protein"])$(id).value=settings[id];
@@ -149,7 +150,7 @@ function render(){
  const result=allPlans();lastResults=result.plans;
  $("planCount").textContent=result.frontierSize+" 种可选";
  $("surprise").disabled=!result.plans.length;
- $("surpriseMessage").textContent=luckyKey?"刚刚选好了！你也可以再抽一次。":"还在犹豫？交给一点小运气。";
+ $("surpriseMessage").textContent=luckyKey?"刚刚选好了！你也可以再抽一次。":imported?"本地餐品资料已启用；分享链接不会携带资料。":"还在犹豫？交给一点小运气。";
  $("stats").replaceChildren(
   node("span","",result.eligible+" 种符合条件的搭配"),
   node("span","",result.frontierSize+" 种各有优点"),

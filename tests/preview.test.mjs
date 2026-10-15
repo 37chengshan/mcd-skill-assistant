@@ -23,7 +23,7 @@ test("interactive preview serves its own imported modules but not private files"
   assert.equal(response.headers.get("x-content-type-options"),"nosniff");
   if(path.endsWith(".mjs"))assert.match(response.headers.get("content-type"),/javascript/);
  }
- for(const path of ["/.env","/src/mcp.mjs","/package.json","/MCP_INTEGRATION.md"]){
+ for(const path of ["/.env","/src/mcp.mjs","/package.json","/MCP_INTEGRATION.md","/data/nutrition-snapshot.json"]){
   const response=await fetch("http://127.0.0.1:4173"+path);
   assert.equal(response.status,404,path+" must stay private");
  }

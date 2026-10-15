@@ -21,6 +21,7 @@
 .meal-card:focus{outline:3px solid #347453;outline-offset:3px}
 @supports(padding:env(safe-area-inset-bottom)){.trust{padding-bottom:max(10px,env(safe-area-inset-bottom))}}
 .import-area{border:1px solid #f0dba3;background:linear-gradient(145deg,#fff9ea,#fff)}.import-button{display:inline-flex;align-items:center;margin-top:13px;padding:11px 16px;background:#315a42;color:#fff;border-radius:11px;font-weight:850;min-height:44px;cursor:pointer}.import-button:focus-visible{outline:3px solid #b88700}.import-status{font-size:12px;color:#665f4f;line-height:1.6}.visually-hidden{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden;white-space:nowrap}.visually-hidden:focus+.import-button{outline:3px solid #b88700}.food-search{border:1px solid #e5dcc9;border-radius:10px;padding:10px 12px;width:100%;font-size:12px;min-height:44px}.search-label{font-size:11px;font-weight:800;color:#686354;display:block;margin:6px 0}.chooser button:disabled{opacity:.43}
+.import-help{display:inline-block;margin-left:5px;color:#24593b;text-decoration:underline;text-underline-offset:3px;font-weight:800}.import-help:focus-visible{outline-offset:3px}
 </style>
 </head>
 <body>
@@ -45,6 +46,14 @@
 <button type="button" class="reset" id="reset">↺ 重选一次</button>
 </aside>
 <div class="content">
+<section class="panel extra import-area" aria-labelledby="importHeading">
+<div class="section-number">更多玩法</div><h2 id="importHeading">换成自己的餐品资料</h2>
+<p>如果你已经在电脑上保存了餐品营养表，可以在这里打开。资料只留在当前页面，不会上传。</p>
+<label class="import-button" for="loadNutrition">📂 打开餐品资料</label>
+<input id="loadNutrition" type="file" accept=".json,application/json" class="visually-hidden" aria-describedby="loadStatus">
+<button type="button" id="backDemo" class="share-btn hide">↩ 回到体验示例</button>
+<p class="import-status" id="loadStatus" role="status">打开后可直接查看搭配。因为无法核实实时价格，页面不会进行省钱排名。<a class="import-help" href="https://github.com/37chengshan/mcd-skill-assistant#-v2-候选版导入电脑里的餐品营养资料" rel="noopener noreferrer">如何准备这份资料？↗</a></p>
+</section>
 <section class="panel intro-panel" aria-labelledby="result-title">
 <div class="intro-head"><div><div class="section-number">02 · 挑到心仪搭配</div><h2 class="section-title" id="result-title">为你选出这几份</h2><p class="section-copy" style="margin:5px 0 0">从不同角度都值得考虑的搭配里挑，看看理由。</p></div><span class="count" id="planCount">正在挑选…</span></div>
 <div id="stats" class="result-stats"></div><div class="quick-row"><button id="surprise" type="button" class="surprise">🎲 帮我拍板，随机选一份</button><button type="button" id="share" class="share-btn">↗ 把我的选择分享出去</button><span class="small-help" id="surpriseMessage">还在犹豫？交给一点小运气。</span></div><div id="sharePanel" class="share-panel hide" role="status"><label for="shareUrl">复制下面的链接，就能把这些条件分享给朋友：</label><input id="shareUrl" type="text" readonly aria-label="你的分享链接"></div><div class="notice" id="dataNotice">体验提示：以下餐品名称、营养数字和价格均为演示内容，不代表麦当劳实际菜单或售价。</div>
@@ -52,14 +61,7 @@
 <div id="cards" class="results" aria-label="搭配结果"></div>
 <button type="button" class="more-button hide" id="showMore">再看看其他搭配 ↓</button>
 <section class="panel extra hide" id="compare" aria-labelledby="compare-title"><div class="section-number">03 · 放在一起看</div><h2 id="compare-title">两份搭配，哪份更适合你？</h2><p>挑两份后，这里会告诉你差在哪里。</p><div id="compareContent"></div></section>
-<section class="panel extra import-area" aria-labelledby="importHeading">
-<div class="section-number">更多玩法</div><h2 id="importHeading">换成自己的餐品资料</h2>
-<p>如果你已经在电脑上保存了餐品营养表，可以在这里打开。资料只留在当前页面，不会上传。</p>
-<label class="import-button" for="loadNutrition">📂 打开餐品资料</label>
-<input id="loadNutrition" type="file" accept=".json,application/json" class="visually-hidden" aria-describedby="loadStatus">
-<button type="button" id="backDemo" class="share-btn hide">↩ 回到体验示例</button>
-<p class="import-status" id="loadStatus" role="status">打开后可直接查看搭配，价格未知时不会进行省钱排名。</p>
-</section>
+
 <section class="panel extra" id="scenario" aria-labelledby="scenarioTitle"><div class="section-number">换个角度</div><h2 id="scenarioTitle">如果换一种心情呢？</h2><p id="scenarioIntro">同样的条件，不同的偏好，会有哪些变化？</p><div id="scenarioContent" class="scenario-body"></div><button type="button" id="tryScenario" class="scenario-action">试试另一种吃法 →</button></section><section class="panel extra" id="tip"><div class="section-number">小贴士</div><h2>没有唯一正确的答案</h2><p>有人在意预算，有人想吃得轻盈一点。每一种选择都有自己的理由，你最在意的，就是好选择。</p><div class="link-line"><span class="section-copy">本作品提供选择参考，不是医疗或营养建议。</span><a href="https://github.com/37chengshan/mcd-skill-assistant" rel="noopener noreferrer">认识这个作品 ↗</a></div></section>
 </div>
 </main>
