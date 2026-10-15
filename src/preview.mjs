@@ -25,7 +25,10 @@ const allowed = new Map([
   ["/journey.mjs", ["journey.mjs", "text/javascript; charset=utf-8"]],
   ["/journey-engine.mjs", ["journey-engine.mjs", "text/javascript; charset=utf-8"]],
   ["/offline.mjs", ["offline.mjs", "text/javascript; charset=utf-8"]],
-  ["/offline-worker.js", ["offline-worker.js", "text/javascript; charset=utf-8"]]
+  ["/offline-worker.js", ["offline-worker.js", "text/javascript; charset=utf-8"]],
+  ["/story.html", ["story.html", "text/html; charset=utf-8"]],
+  ["/story.mjs", ["story.mjs", "text/javascript; charset=utf-8"]],
+  ["/story-engine.mjs", ["story-engine.mjs", "text/javascript; charset=utf-8"]]
 ]);
 const server = createServer(async (req, res) => {
   let pathname;
