@@ -17,7 +17,7 @@ let guided=false;
 if(guidedParams.has("b")){
  const b=Number(guidedParams.get("b")),c=Number(guidedParams.get("c")),
    p=Number(guidedParams.get("p")),v=Number(guidedParams.get("v")),m=guidedParams.get("m");
- if(Number.isInteger(b)&&b>=20&&b<=80&&Number.isInteger(c)&&c>=200&&c<=1500&&
+ if(Number.isInteger(b)&&b>=15&&b<=80&&Number.isInteger(c)&&c>=200&&c<=1500&&
    Number.isInteger(p)&&p>=0&&p<=70&&Number.isInteger(v)&&v>=0&&v<=100&&
    ["balanced","save","protein","light"].includes(m)){
   settings={budget:b,maxCalories:c,minProtein:p,variety:v,goal:m};guided=true;
@@ -108,7 +108,7 @@ function restore(){
   const saved=JSON.parse(raw);
   if(saved.version!==1||!saved.settings||!Array.isArray(saved.replacements)||saved.replacements.length>80)return;
   const s=saved.settings;
-  if(!Number.isInteger(s.budget)||s.budget<20||s.budget>80||
+  if(!Number.isInteger(s.budget)||s.budget<15||s.budget>80||
     !Number.isInteger(s.maxCalories)||s.maxCalories<200||s.maxCalories>1500||
     !Number.isInteger(s.minProtein)||s.minProtein<0||s.minProtein>70||
     !Number.isInteger(s.variety)||s.variety<0||s.variety>100||
