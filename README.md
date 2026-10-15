@@ -4,7 +4,7 @@
 
 > 🟡 **参赛作品，非麦当劳官方产品。** 在线静态界面仅展示虚构样例，不会读取你的 Token、不会自动下单。真实数据通过本地 MCP Client 查询；实际餐品、价格、活动和权益均以麦当劳官方实时结果为准。
 
-**[🚀 查看互动演示源代码](docs/index.html)** · **[🧠 Skill 指令](skills/mcdecision-lab/SKILL.md)** · **[🔌 MCP 集成详情](MCP_INTEGRATION.md)** · **[📢 官方比赛](https://github.com/M-China/mcd-developer-innovation-challenge)**
+**[🎨 交互页面](docs/index.html)** · **[🔍 十轮质量迭代记录](ITERATION_REPORT.md)** · **[🧠 Skill 指令](skills/mcdecision-lab/SKILL.md)** · **[🔌 MCP 集成详情](MCP_INTEGRATION.md)** · **[📢 官方比赛](https://github.com/M-China/mcd-developer-innovation-challenge)**
 
 ## ✨ 它能做什么？
 
@@ -16,9 +16,21 @@
 | 活动提醒素材 | campaign-calendar 获取实时活动日历 | 真实 MCP，查询不意味着活动一定可用 |
 | 我的券包 | query-my-coupons 仅读取本人可用券 | 真实 MCP，绝不自动领券或下单 |
 
+## 🪄 面向普通用户的创新玩法
+
+- **今天想怎么吃？** 均衡一点、更省一点、更有料、轻盈一点，四种心情可以一键切换。
+- **各有理由的推荐**：直观看到参考花费、能量和蛋白质，还能了解每一项距离自己定的目标有多少余量。
+- **“帮我拍板”**：纠结时随机选一份高亮展示；真实的选择感，而不只是静态卡片。
+- **两份摆在一起**：查看预算、能量、蛋白质的差别，不凭空宣称“最省钱”。
+- **如果换个想法**：试试另一种目标，看看推荐会如何变化；条件过严时给出可操作的放宽建议。
+- **不想吃的排除**：轻点食物标签就能排除；也可以复制安全的分享链接，让朋友沿用同样的偏好。
+- **全新手机体验**：暖黄色视觉、紧凑标题、键盘操作支持和适配触控的按钮；页面不向普通用户展示开发者术语。
+
+> **重要**：当前网页完全采用演示数据，真实营养、菜单和价格仍须以麦当劳官方实时信息为准。我们的浏览器页面不会连接你的个人账户，也不接收 Token。
+
 ## 🖥 30 秒玩起来
 
-最直观的体验：打开仓库里的 [docs/index.html](docs/index.html)，或通过你启用 GitHub Pages 后的演示站点访问。更推荐用本地静态服务器，保障 ES modules 正常加载。
+最直观的体验：安装 Node.js 22+ 后用下面的命令启动本地页面。直接双击 HTML 文件可能因浏览器安全限制而不能加载互动功能。
 
 ~~~bash
 # 电脑已经安装 Node.js 22+ 的情况下
@@ -30,7 +42,11 @@ npm test
 npm run preview
 ~~~
 
-然后在浏览器打开 http://127.0.0.1:4173 。页面所有食品与价格都是**明确标注的虚构样例**，方便无 Token 的评委立即体验。
+然后在浏览器打开 http://127.0.0.1:4173 ，手机和电脑都可使用。页面中的食品和价格属于**明确标注的演示内容**，无需 Token 就能体验创新玩法。
+
+### 一次性开启在线展示
+
+仓库管理者进入 **Settings → Pages → Build and deployment → Source → GitHub Actions** 并保存。之后在 GitHub 的 **Actions → Static preview → Run workflow** 运行一次发布，完成后在线地址通常为 `https://37chengshan.github.io/mcd-skill-assistant/`。在 Actions 显示真正的 `deploy` 成功之前，请勿宣称页面已上线。配置后的后续前端更新会自动发布。
 
 ## 🔌 真正连接麦当劳 MCP
 
