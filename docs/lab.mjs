@@ -61,7 +61,8 @@ export function rescueConstraints(foods,options={}) {
 }
 export function scenarioSummary(foods,options={}) {
   const baseline=optimize(foods,{...options,limit:10});
-  const alternate=optimize(foods,{...options,goal:options.goal==="save"?"protein":"save",limit:10});
+  const nextGoal=options.hasPrices===false ? (options.goal==="light"?"protein":"light") : (options.goal==="save"?"protein":"save");
+  const alternate=optimize(foods,{...options,goal:nextGoal,limit:10});
   return {baseline,alternate,shifts:baseline.plans[0]&&alternate.plans[0]?
     comparePlans(baseline.plans[0],alternate.plans[0]):null};
 }
