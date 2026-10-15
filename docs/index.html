@@ -16,13 +16,18 @@
 .quick-row{display:flex;align-items:center;flex-wrap:wrap;gap:11px;margin-top:15px}.surprise{padding:10px 13px;background:#ffc83d;border:1px solid #e4b127;border-radius:11px;font-size:12px;font-weight:850;color:#473405;box-shadow:0 3px 0 #e1af24;touch-action:manipulation}.surprise:hover{background:#ffd858}.small-help{font-size:11px;color:#8a806d}.meal-card.is-picked{border:2px solid #378059!important;box-shadow:0 6px 27px #34805529!important}.picked-label{border-radius:7px;background:#e9f4eb;color:#286347;padding:5px 9px;font-weight:900;font-size:11px;margin-top:12px;display:inline-block}
 .scenario-body{margin:13px 0;padding:15px;background:#f7f6ed;border:1px solid #e7e5d9;border-radius:11px}.scenario-body strong{font-size:14px;display:block}.scenario-body p{line-height:1.65;margin-top:5px}.scenario-action{display:inline-flex;background:#315a42;border:1px solid #315a42;color:#fff;border-radius:10px;padding:10px 13px;font-weight:800;font-size:12px;touch-action:manipulation}.scenario-action:hover{background:#244936}
 .share-btn{padding:10px 12px;border:1px solid #d8d2c2;border-radius:11px;background:#fff;color:#4b4537;font-size:12px;font-weight:850;touch-action:manipulation}.share-btn:hover{background:#f8f4e8}.share-panel{margin-top:12px;border-radius:10px;border:1px solid #d7e3d3;background:#f0f7ee;padding:11px;font-size:12px}.share-panel label{display:block;margin-bottom:5px;color:#385b3a}.share-panel input{width:100%;border:1px solid #d6dfd1;border-radius:6px;padding:8px;color:#263325;background:white;font-size:12px}
+.skip-link{position:fixed;top:-100px;left:15px;z-index:100;background:#292d24;color:#fff;padding:10px 15px;border-radius:0 0 10px 10px;font-weight:850}.skip-link:focus{top:0}
+.chip,.compare-button,.nav-link,.text-button,.share-btn,.surprise,.scenario-action,.rescue-btn,.reset,.more-button,.chooser button{min-height:44px;touch-action:manipulation}
+.meal-card:focus{outline:3px solid #347453;outline-offset:3px}
+@supports(padding:env(safe-area-inset-bottom)){.trust{padding-bottom:max(10px,env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">跳到主要内容</a>
 <div class="wrap">
 <header class="topbar"><a href="#" class="brand"><span class="sun" aria-hidden="true">✳</span><span class="brand-copy">麦麦好选<small>今天的一餐，轻松决定</small></span></a><nav class="top-actions" aria-label="页面导航"><span class="mini-badge">限时创意作品</span><a class="nav-link" href="https://github.com/37chengshan/mcd-skill-assistant" rel="noopener noreferrer">关于作品 ↗</a></nav></header>
 <section class="hero" aria-labelledby="page-title"><div><div class="overline">YOUR MEAL, YOUR WAY</div><h1 id="page-title">今天吃什么？<br><em>好吃也要有选择。</em></h1><p>说说你的偏好，我们会挑出几种各有优点的搭配。还可以放在一起比，看看哪份更合心意。</p></div><div class="hero-visual" aria-hidden="true"><div class="visual-circle"></div><div class="food-emoji">🍔</div><div class="visual-stamp">好好吃！</div></div></section>
-<main class="workspace">
+<main class="workspace" id="main-content" tabindex="-1">
 <aside class="panel controls" aria-label="挑选偏好">
 <div class="section-number">01 · 先说你的心情</div><h2 class="section-title">今天想怎么吃？</h2><p class="section-copy">选一个方向，下面的条件也能自己改。</p>
 <div id="goals" class="chooser" aria-label="挑选方向">
