@@ -23,7 +23,9 @@ const allowed = new Map([
   ["/perk-engine.mjs", ["perk-engine.mjs", "text/javascript; charset=utf-8"]],
   ["/journey.html", ["journey.html", "text/html; charset=utf-8"]],
   ["/journey.mjs", ["journey.mjs", "text/javascript; charset=utf-8"]],
-  ["/journey-engine.mjs", ["journey-engine.mjs", "text/javascript; charset=utf-8"]]
+  ["/journey-engine.mjs", ["journey-engine.mjs", "text/javascript; charset=utf-8"]],
+  ["/offline.mjs", ["offline.mjs", "text/javascript; charset=utf-8"]],
+  ["/offline-worker.js", ["offline-worker.js", "text/javascript; charset=utf-8"]]
 ]);
 const server = createServer(async (req, res) => {
   let pathname;
