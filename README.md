@@ -4,7 +4,7 @@
 
 > 🟡 **参赛作品，非麦当劳官方产品。** 在线静态界面仅展示虚构样例，不会读取你的 Token、不会自动下单。真实数据通过本地 MCP Client 查询；实际餐品、价格、活动和权益均以麦当劳官方实时结果为准。
 
-**[🎨 交互页面](docs/index.html)** · **[🔍 十轮质量迭代记录](ITERATION_REPORT.md)** · **[🧠 Skill 指令](skills/mcdecision-lab/SKILL.md)** · **[🔌 MCP 集成详情](MCP_INTEGRATION.md)** · **[📢 官方比赛](https://github.com/M-China/mcd-developer-innovation-challenge)**
+**[🎨 交互页面](docs/index.html)** · **[🗺️ 十个大版本路线](MAJOR_RELEASE_ROADMAP.md)** · **[🔍 V1 修复记录](ITERATION_REPORT.md)** · **[🧠 Skill 指令](skills/mcdecision-lab/SKILL.md)** · **[🔌 MCP 集成详情](MCP_INTEGRATION.md)** · **[📢 官方比赛](https://github.com/M-China/mcd-developer-innovation-challenge)**
 
 ## ✨ 它能做什么？
 
