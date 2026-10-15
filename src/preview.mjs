@@ -8,7 +8,10 @@ const allowed = new Map([
   ["/engine.mjs", ["engine.mjs", "text/javascript; charset=utf-8"]],
   ["/lab.mjs", ["lab.mjs", "text/javascript; charset=utf-8"]],
   ["/share.mjs", ["share.mjs", "text/javascript; charset=utf-8"]],
-  ["/snapshot.mjs", ["snapshot.mjs", "text/javascript; charset=utf-8"]]
+  ["/snapshot.mjs", ["snapshot.mjs", "text/javascript; charset=utf-8"]],
+  ["/group.html", ["group.html", "text/html; charset=utf-8"]],
+  ["/group.mjs", ["group.mjs", "text/javascript; charset=utf-8"]],
+  ["/group-engine.mjs", ["group-engine.mjs", "text/javascript; charset=utf-8"]]
 ]);
 const server = createServer(async (req, res) => {
   let pathname;
