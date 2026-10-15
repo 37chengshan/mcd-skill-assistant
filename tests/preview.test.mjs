@@ -17,7 +17,7 @@ test("interactive preview serves its own imported modules but not private files"
   await delay(50);
  }
  assert.ok(started,"preview server did not start");
- for(const path of ["/","/index.html","/app.mjs","/engine.mjs","/lab.mjs","/share.mjs","/snapshot.mjs","/group.html","/group.mjs","/group-engine.mjs","/week.html","/week.mjs","/week-engine.mjs","/map.html","/map.mjs","/map-engine.mjs","/perk.html","/perk.mjs","/perk-engine.mjs"]){
+ for(const path of ["/","/index.html","/app.mjs","/engine.mjs","/lab.mjs","/share.mjs","/snapshot.mjs","/group.html","/group.mjs","/group-engine.mjs","/week.html","/week.mjs","/week-engine.mjs","/map.html","/map.mjs","/map-engine.mjs","/perk.html","/perk.mjs","/perk-engine.mjs","/journey.html","/journey.mjs","/journey-engine.mjs"]){
   const response=await fetch("http://127.0.0.1:4173"+path);
   assert.equal(response.status,200,path+" must be readable");
   assert.equal(response.headers.get("x-content-type-options"),"nosniff");
