@@ -11,7 +11,7 @@
 **Issue 正文（保持下列字段名和格式，不要添加 Markdown 链接或空行）：**
 
 ~~~text
-〖参赛申请〗
+【参赛申请】
 项目名称：麦麦决策实验室 McDecision Lab
 项目地址：https://github.com/37chengshan/mcd-skill-assistant
 项目简介：基于麦当劳中国 MCP 的只读营养、活动与优惠券查询，结合预算、热量和蛋白质进行可解释的多目标套餐决策。提供离线互动演示、真实 MCP 接入代码、自动化测试与开源 Skill。
