@@ -1,0 +1,58 @@
+[
+  {
+    "id": "a",
+    "name": "香煎鸡肉堡（虚构样例）",
+    "calories": 360,
+    "protein": 24,
+    "price": 22
+  },
+  {
+    "id": "b",
+    "name": "玉米杯（虚构样例）",
+    "calories": 90,
+    "protein": 3,
+    "price": 10
+  },
+  {
+    "id": "c",
+    "name": "牛肉堡（虚构样例）",
+    "calories": 410,
+    "protein": 22,
+    "price": 23
+  },
+  {
+    "id": "d",
+    "name": "小份沙拉（虚构样例）",
+    "calories": 60,
+    "protein": 2,
+    "price": 12
+  },
+  {
+    "id": "e",
+    "name": "无糖饮品（虚构样例）",
+    "calories": 0,
+    "protein": 0,
+    "price": 9
+  },
+  {
+    "id": "f",
+    "name": "烤鸡卷（虚构样例）",
+    "calories": 320,
+    "protein": 20,
+    "price": 20
+  },
+  {
+    "id": "g",
+    "name": "酸奶（虚构样例）",
+    "calories": 130,
+    "protein": 8,
+    "price": 12
+  },
+  {
+    "id": "h",
+    "name": "鸡蛋三明治（虚构样例）",
+    "calories": 280,
+    "protein": 16,
+    "price": 18
+  }
+]
