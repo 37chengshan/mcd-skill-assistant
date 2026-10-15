@@ -28,3 +28,12 @@ test("the mobile layout respects reduced motion and keyboard focus",()=>{
  assert.match(html,/:focus-visible/);
  assert.match(html,/<meta name="viewport" content="width=device-width,initial-scale=1">/);
 });
+
+test("data-import interface is available and cannot accept a live token",()=>{
+ assert.match(html,/id="loadNutrition"/);
+ assert.match(html,/id="loadStatus" role="status"/);
+ assert.match(html,/id="backDemo"/);
+ assert.match(script,/readNutritionSnapshot\(await file\.text\(\)\)/);
+ assert.match(script,/budget:imported\?null:settings\.budget/);
+ assert.match(script,/imported && button\.dataset\.goal==="save"/);
+});

@@ -1,8 +1,9 @@
 import { optimize } from "./engine.mjs";
 import { comparePlans, explainPlan, rescueConstraints, scenarioSummary } from "./lab.mjs";
 import { decodeChoices,encodeChoices } from "./share.mjs";
+import { readNutritionSnapshot } from "./snapshot.mjs";
 // All food names and numbers on this page are deliberately fictional.
-const foods=[
+const demoFoods=[
 {id:"a",name:"香煎鸡肉堡",calories:360,protein:24,price:22},
 {id:"b",name:"玉米小杯",calories:90,protein:3,price:10},
 {id:"c",name:"牛肉堡",calories:410,protein:22,price:23},
@@ -12,6 +13,8 @@ const foods=[
 {id:"g",name:"酸奶",calories:130,protein:8,price:12},
 {id:"h",name:"鸡蛋三明治",calories:280,protein:16,price:18}
 ];
+let foods=[...demoFoods];
+let imported=false,searchTerm="";
 const $=id=>document.getElementById(id);
 const defaultSettings={goal:"balanced",budget:45,calories:850,protein:25};
 const initial=decodeChoices(window.location.search,foods.map(x=>x.id));
@@ -27,16 +30,20 @@ function metric(label,value){
  el.append(strong,node("span","",label));return el;
 }
 function allPlans(){
- return optimize(foods,{goal:settings.goal,budget:settings.budget,
+ return optimize(foods,{goal:settings.goal,budget:imported?null:settings.budget,
    maxCalories:settings.calories,minProtein:settings.protein,excludeIds:[...exclusions],limit:12});
 }
 function renderGoals(){
- document.querySelectorAll("[data-goal]").forEach(button=>
-  button.setAttribute("aria-pressed",String(button.dataset.goal===settings.goal)));
+ document.querySelectorAll("[data-goal]").forEach(button=>{
+  button.setAttribute("aria-pressed",String(button.dataset.goal===settings.goal));
+  if(imported && button.dataset.goal==="save")button.disabled=true;
+  else button.disabled=false;
+ });
 }
 function renderFilters(){
  const el=$("exclude");el.replaceChildren();
- for(const food of foods){
+ const matches=foods.filter(food=>food.name.includes(searchTerm)||exclusions.has(food.id));
+ for(const food of matches.slice(0,24)){
   const b=node("button","chip",food.name);b.type="button";b.setAttribute("aria-pressed",String(exclusions.has(food.id)));
   b.dataset.foodId=food.id;
   b.addEventListener("click",()=>{
@@ -57,7 +64,7 @@ function comparePanel(){
  for(const plan of selectedPlans){
   const tile=node("div","compare-tile");
   tile.append(node("strong","",plan.foods.join(" + ")),node("span","",
-    "¥"+(plan.price===null?"未知":plan.price.toFixed(0))+
+    (plan.price===null?"价格未知":"¥"+plan.price.toFixed(0))+
     " · "+Math.round(plan.calories)+" 千卡 · "+plan.protein.toFixed(1)+" 克蛋白质"));
   pair.append(tile);
  }
@@ -80,7 +87,7 @@ function planCard(plan){
   node("span","small","第 "+plan.rank+" 份"));
  item.append(top,node("h3","",plan.foods.join(" + ")));
  const figures=node("div","metrics");
- figures.append(metric("参考花费","¥"+(plan.price===null?"未知":plan.price.toFixed(0))),
+ figures.append(metric("参考花费",plan.price===null?"价格未知":"¥"+plan.price.toFixed(0)),
    metric("热量",Math.round(plan.calories)+" 千卡"),metric("蛋白质",plan.protein.toFixed(1)+" 克"));
  item.append(figures);
  const why=node("div","why-lines");
@@ -92,8 +99,9 @@ function planCard(plan){
  const actions=node("div","card-actions");
  const copy=node("button","text-button","↗ 复制这份搭配");
  copy.type="button";copy.addEventListener("click",async()=>{
-  const words="【仅供演示】"+plan.foods.join(" + ")+"；参考花费 ¥"+plan.price+
-     "；热量 "+Math.round(plan.calories)+" 千卡；蛋白质 "+plan.protein.toFixed(1)+" 克。";
+  const words=(imported?"【用户导入的资料，来源未经网页核实】":"【演示数据】")+
+    plan.foods.join(" + ")+"；"+(plan.price===null?"价格未知":"参考花费 ¥"+plan.price)+
+    "；热量 "+Math.round(plan.calories)+" 千卡；蛋白质 "+plan.protein.toFixed(1)+" 克。";
   try{await navigator.clipboard.writeText(words);copy.textContent="✓ 已复制";}
   catch{copy.textContent="复制未成功，请再试一次";}
  });
@@ -110,9 +118,10 @@ function planCard(plan){
  actions.append(copy,choice);item.append(actions);return item;
 }
 function renderScenario(){
- const mode=settings.goal==="save"?"protein":"save";
- const nextLabel=mode==="save"?"更省一点":"更有料";
- const scenario=scenarioSummary(foods,{goal:settings.goal,budget:settings.budget,
+ const mode=imported?(settings.goal==="protein"?"light":"protein"):
+   (settings.goal==="save"?"protein":"save");
+ const nextLabel=mode==="save"?"更省一点":mode==="light"?"轻盈一点":"更有料";
+ const scenario=scenarioSummary(foods,{goal:settings.goal,hasPrices:!imported,budget:imported?null:settings.budget,
    maxCalories:settings.calories,minProtein:settings.protein,excludeIds:[...exclusions]});
  const area=$("scenarioContent");area.replaceChildren();
  $("tryScenario").textContent="试试“"+nextLabel+"” →";
@@ -129,7 +138,11 @@ function renderScenario(){
  area.append(node("p","","如果更在意“"+nextLabel+"”，你可以考虑这份。"+difference.narrative+"。"));
 }
 function render(){
- $("budgetValue").textContent="¥"+settings.budget;
+ $("budgetValue").textContent=imported?"暂不比较价格":"¥"+settings.budget;
+ $("budgetField").classList.toggle("hide",imported);
+ $("share").disabled=imported;
+ $("share").title=imported?"导入的资料只保留在你的电脑上，无法随链接一起分享。":"";
+ $("surpriseMessage").textContent=imported?"已使用本地餐品资料，价格未知。":"还在犹豫？交给一点小运气。";
  $("caloriesValue").textContent=settings.calories+" 千卡";
  $("proteinValue").textContent=settings.protein+" 克";
  for(const id of ["budget","calories","protein"])$(id).value=settings[id];
@@ -137,16 +150,17 @@ function render(){
  const result=allPlans();lastResults=result.plans;
  $("planCount").textContent=result.frontierSize+" 种可选";
  $("surprise").disabled=!result.plans.length;
- $("surpriseMessage").textContent=luckyKey?"刚刚选好了！你也可以再抽一次。":"还在犹豫？交给一点小运气。";
+ $("surpriseMessage").textContent=luckyKey?"刚刚选好了！你也可以再抽一次。":imported?"本地餐品资料已启用；分享链接不会携带资料。":"还在犹豫？交给一点小运气。";
  $("stats").replaceChildren(
   node("span","",result.eligible+" 种符合条件的搭配"),
   node("span","",result.frontierSize+" 种各有优点"),
-  node("span","",exclusions.size+" 种已排除"));
+  node("span","",exclusions.size+" 种已排除"),
+  node("span","",result.approximate?"候选数量较多，先展示部分推荐":"已经比较全部候选"));
  const cards=$("cards");cards.replaceChildren();
  if(result.plans.length===0){
   const empty=node("section","empty");
   empty.append(node("h3","","这次还没有找到合适的"),node("p","","换一个条件，就可能有新发现。"));
-  const proposals=rescueConstraints(foods,{budget:settings.budget,maxCalories:settings.calories,
+  const proposals=rescueConstraints(foods,{budget:imported?undefined:settings.budget,maxCalories:settings.calories,
    minProtein:settings.protein,goal:settings.goal,excludeIds:[...exclusions]});
   const actions=node("div","rescue-list");
   if(!proposals.length)actions.append(node("p","","试试取消一些不想吃的选项，或者点“重选一次”。"));
@@ -206,6 +220,38 @@ $("share").addEventListener("click",async()=>{
    input.focus();input.select();
    $("share").textContent="长按下方链接进行复制";
  }
+});
+$("foodSearch").addEventListener("input",()=>{
+ searchTerm=$("foodSearch").value.trim().slice(0,50);
+ const chipFocus=$("foodSearch");renderFilters();chipFocus.focus({preventScroll:true});
+});
+$("loadNutrition").addEventListener("change",async event=>{
+ const file=event.target.files?.[0];if(!file)return;
+ const message=$("loadStatus");
+ try{
+  if(file.size>512*1024)throw new Error("too large");
+  const snapshot=readNutritionSnapshot(await file.text());
+  foods=snapshot.foods;
+  imported=true;settings.goal=settings.goal==="save"?"balanced":settings.goal;
+  exclusions.clear();selected.clear();searchTerm="";$("foodSearch").value="";
+  luckyKey=null;expanded=false;
+  $("backDemo").classList.remove("hide");
+  $("dataNotice").textContent="正在使用你从本地打开的餐品营养资料。网页无法独立核实来源，暂无可用价格或门店库存信息，请以官方渠道为准。";
+  message.textContent="已打开 "+foods.length+" 种餐品的营养资料。只在当前页面使用，不会上传。";
+  render();
+ }catch{
+  message.textContent="没有打开成功。请使用本项目在电脑上生成的餐品资料，文件不应含任何个人信息。";
+ }
+ event.target.value="";
+});
+$("backDemo").addEventListener("click",()=>{
+ foods=[...demoFoods];imported=false;searchTerm="";$("foodSearch").value="";
+ exclusions.clear();selected.clear();Object.assign(settings,defaultSettings);
+ expanded=false;luckyKey=null;
+ $("backDemo").classList.add("hide");
+ $("dataNotice").textContent="体验提示：以下餐品名称、营养数字和价格均为演示内容，不代表麦当劳实际菜单或售价。";
+ $("loadStatus").textContent="已回到体验示例。";
+ render();
 });
 $("reset").addEventListener("click",()=>{
  Object.assign(settings,defaultSettings);exclusions.clear();selected.clear();expanded=false;luckyKey=null;

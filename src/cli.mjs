@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { fileURLToPath } from "node:url";
-import { readFile } from "node:fs/promises";
+import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { createNutritionSnapshot } from "../docs/snapshot.mjs";
 import { optimize } from "../docs/engine.mjs";
 import { extractNutrition } from "./normalize.mjs";
 
@@ -10,6 +11,7 @@ const guide = [
   "  npm run live -- tools     # 从真实 MCP 发现可用工具",
   "  npm run live -- nutrition # 真实营养查询（只读）",
   "  npm run live -- analyze   # 真实营养数据 + 多目标方案",
+  "  npm run live -- export    # 保存不含个人信息的营养资料，供网页打开",
   "  npm run live -- calendar  # 活动日历（只读）",
   "  npm run live -- coupons   # 个人优惠券查询（只读）",
   "所有价格以官方实时结算为准；本项目不会自动下单、领券或扣积分。"
@@ -23,7 +25,7 @@ export async function run(args = process.argv.slice(2)) {
       minProtein: 25, source: "illustrative" }), null, 2));
     return;
   }
-  if (mode !== "live" || !["tools", "nutrition", "analyze", "calendar", "coupons"].includes(action)) {
+  if (mode !== "live" || !["tools", "nutrition", "analyze", "export", "calendar", "coupons"].includes(action)) {
     console.log(guide);
     return;
   }
@@ -36,11 +38,11 @@ export async function run(args = process.argv.slice(2)) {
       })), null, 2));
       return;
     }
-    const tool = { nutrition: "list-nutrition-foods", analyze: "list-nutrition-foods",
+    const tool = { nutrition: "list-nutrition-foods", analyze: "list-nutrition-foods", export: "list-nutrition-foods",
       calendar: "campaign-calendar", coupons: "query-my-coupons" }[action];
     const result = await call(tool);
     if (result.isError) throw new Error("MCP 工具返回错误：" + tool);
-    if (action !== "analyze") {
+    if (!["analyze","export"].includes(action)) {
       console.log(JSON.stringify(result, null, 2));
       return;
     }
@@ -48,6 +50,17 @@ export async function run(args = process.argv.slice(2)) {
     if (!foods.length) {
       console.log("真实 MCP 已响应，但营养字段无法安全映射为每份 kcal 和 g；拒绝编造数据。");
       console.log("可运行 npm run live -- nutrition 查看结构并更新 src/normalize.mjs。");
+      return;
+    }
+    if (action === "export") {
+      const snapshot = createNutritionSnapshot(foods);
+      const targetDir = new URL("../data/", import.meta.url);
+      await mkdir(targetDir,{recursive:true});
+      await writeFile(new URL("nutrition-snapshot.json",targetDir),
+        JSON.stringify(snapshot,null,2)+"\n",{mode:0o600});
+      console.log("已保存 "+snapshot.foods.length+
+        " 条公开营养数据到 data/nutrition-snapshot.json；不包含个人身份资料或售价。");
+      console.log("在网页选择“打开餐品资料”即可体验真实营养数据，不需在网页输入任何密钥。");
       return;
     }
     const solution = optimize(foods, { budget: null, maxCalories: 850,

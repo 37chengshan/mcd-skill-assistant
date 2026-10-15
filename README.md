@@ -4,7 +4,7 @@
 
 > 🟡 **参赛作品，非麦当劳官方产品。** 在线静态界面仅展示虚构样例，不会读取你的 Token、不会自动下单。真实数据通过本地 MCP Client 查询；实际餐品、价格、活动和权益均以麦当劳官方实时结果为准。
 
-**[🎨 交互页面](docs/index.html)** · **[🔍 十轮质量迭代记录](ITERATION_REPORT.md)** · **[🧠 Skill 指令](skills/mcdecision-lab/SKILL.md)** · **[🔌 MCP 集成详情](MCP_INTEGRATION.md)** · **[📢 官方比赛](https://github.com/M-China/mcd-developer-innovation-challenge)**
+**[🎨 交互页面](docs/index.html)** · **[🗺️ 十个大版本路线](MAJOR_RELEASE_ROADMAP.md)** · **[🔍 V1 修复记录](ITERATION_REPORT.md)** · **[🧠 Skill 指令](skills/mcdecision-lab/SKILL.md)** · **[🔌 MCP 集成详情](MCP_INTEGRATION.md)** · **[📢 官方比赛](https://github.com/M-China/mcd-developer-innovation-challenge)**
 
 ## ✨ 它能做什么？
 
@@ -15,6 +15,23 @@
 | 真实营养分析 | 通过官方 MCP 的 list-nutrition-foods 查询，安全映射字段与单位 | 真实 MCP；字段不明确时拒绝编造 |
 | 活动提醒素材 | campaign-calendar 获取实时活动日历 | 真实 MCP，查询不意味着活动一定可用 |
 | 我的券包 | query-my-coupons 仅读取本人可用券 | 真实 MCP，绝不自动领券或下单 |
+
+## 🍔 V2 候选版：导入电脑里的餐品营养资料
+
+**这是从 V1 的虚构示例到数据驱动体验的产品升级，当前仍需真实授权联调。** 浏览器不连接麦当劳账户，也不接收密钥。使用者在自己的电脑上通过只读服务获取营养资料，导出为严格脱敏的本地文件，再在网页上打开它。原始券包、账户信息和登录凭证绝不会进入网页。
+
+~~~bash
+npm install
+# 将有效的个人 MCD_MCP_TOKEN 只设置在本机终端
+npm run live -- export
+npm run preview
+~~~
+
+终端生成本机文件 `data/nutrition-snapshot.json`，它已加入 .gitignore，不会通过常规 Git 提交。打开 http://127.0.0.1:4173 ，找到“**打开餐品资料**”，选择这个文件。页面就会用导入的餐品营养数字进行筛选；因为营养服务没有确认的门店价格，**预算筛选会自动暂停**，“更省一点”模式会禁用，结果会显示“价格未知”。上传文件始终在浏览器本地读取，页面不会主动发送它。
+
+**尚未完成的验证**：当前只有格式解析单元测试、静态前端和本地服务检查通过；有效账号的 MCP 实际返回格式、餐品计量单位与数据覆盖度仍要实测确认。网页不会独立确认导入文件是否真实来自官方，最终营养和售价以官方渠道为准。
+
+完整产品级目标见 [MAJOR_RELEASE_ROADMAP.md](MAJOR_RELEASE_ROADMAP.md)；V1 的小改动单独记录于 [ITERATION_REPORT.md](ITERATION_REPORT.md)。
 
 ## 🪄 面向普通用户的创新玩法
 
