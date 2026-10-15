@@ -44,8 +44,8 @@ export function readNutritionSnapshot(input){
    priceStatus:"unknown",foods};
 }
 export function createNutritionSnapshot(foods,when=new Date().toISOString()){
- if(!Array.isArray(foods)||!foods.length)throw new Error("catalog empty");
- const safe=foods.slice(0,MAX_ITEMS).map((item,index)=>({
+ if(!Array.isArray(foods)||!foods.length||foods.length>MAX_ITEMS)throw new Error("catalog empty or exceeds size limit");
+ const safe=foods.map((item,index)=>({
    id:typeof item.id==="string"&&/^[a-zA-Z0-9_:.-]{1,90}$/.test(item.id)?
      item.id:"item-"+index,
    name:item.name,

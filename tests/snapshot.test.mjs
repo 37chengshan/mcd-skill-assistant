@@ -23,6 +23,7 @@ test("rejects empty, broken, duplicate or oversized catalogs",()=>{
  assert.throws(()=>readNutritionSnapshot({...snap,foods:[]}),/catalog/i);
  assert.throws(()=>readNutritionSnapshot({...snap,foods:[snap.foods[0],snap.foods[0]]}),/duplicate/i);
  assert.throws(()=>createNutritionSnapshot([]),/catalog/i);
+ assert.throws(()=>createNutritionSnapshot(Array.from({length:301},(_,i)=>({id:"i"+i,name:"item"+i,calories:150,protein:12}))),/limit/i);
  assert.throws(()=>readNutritionSnapshot("x".repeat(700000)),/size/i);
 });
 test("limits suspicious food names and nutritional units",()=>{
