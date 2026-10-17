@@ -66,10 +66,12 @@ function collect(value, output, depth=0) {
     }
   }
 }
-function numeric(value) {
+function numeric(value, unit) {
   if(typeof value==="number")return Number.isFinite(value)?value:null;
-  if(typeof value!=="string"||!/^\s*\d+(?:\.\d+)?\s*(?:kcal|g|元)?\s*$/i.test(value))return null;
-  return parseFloat(value);
+  if(typeof value!=="string")return null;
+  const match=value.match(/^\s*(\d+(?:\.\d+)?)\s*(kcal|kj|g|元)?\s*$/i);
+  if(!match || (match[2] && match[2].toLowerCase()!==unit))return null;
+  return Number(match[1]);
 }
 function pick(object,keys) {
   for(const key of keys)if(object[key]!==undefined&&object[key]!==null)return object[key];
@@ -83,11 +85,11 @@ export function extractNutrition(payload) {
     const info=(item.nutrition&&typeof item.nutrition==="object" ? item.nutrition :
       item.nutritionInfo&&typeof item.nutritionInfo==="object" ? item.nutritionInfo : item);
     const name=pick(item,["name","foodName","food_name","productName","餐品名称","名称"]);
-    let calories=numeric(pick(info,["calories","kcal","energyKcal","energy_kcal","热量","能量(kcal)"]));
-    const kJ=numeric(pick(info,["energyKj","energy_kj","能量(kJ)"]));
+    let calories=numeric(pick(info,["calories","kcal","energyKcal","energy_kcal","热量","能量(kcal)"]),"kcal");
+    const kJ=numeric(pick(info,["energyKj","energy_kj","能量(kJ)"]),"kj");
     if(calories===null&&kJ!==null)calories=kJ/4.184;
-    const protein=numeric(pick(info,["protein","proteinG","protein_g","蛋白质","蛋白质(g)"]));
-    const price=numeric(pick(item,["priceYuan","price_yuan","referencePrice"]));
+    const protein=numeric(pick(info,["protein","proteinG","protein_g","蛋白质","蛋白质(g)"]),"g");
+    const price=numeric(pick(item,["priceYuan","price_yuan","referencePrice"]),"元");
     if(typeof name!=="string"||!name.trim()||calories===null||protein===null||
        calories<0||protein<0||calories>10000||protein>500) continue;
     const id=String(pick(item,["foodCode","code","id"])??name);
