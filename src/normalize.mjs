@@ -60,6 +60,8 @@ function collect(value, output, depth=0) {
   } else if(Array.isArray(value)) {
     for(const part of value)collect(part,output,depth+1);
   } else if(typeof value==="object") {
+    // Failed envelopes must not expose stale nested nutrition as valid data.
+    if(value.isError===true || value.success===false) return;
     output.push(value);
     for(const [key,item] of Object.entries(value)) if(FIELDS.includes(key)){
       collect(item,output,depth+1);

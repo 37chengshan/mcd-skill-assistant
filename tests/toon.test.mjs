@@ -29,3 +29,12 @@ test("rejects ambiguous units or incompatible columns",()=>{
 test("prevents unconstrained huge TOON payloads",()=>{
   assert.deepEqual(parseToon('[999999]{productName,energyKcal,protein}:\n  Foo,100,10'),[]);
 });
+
+test("ignores explicitly failed MCP nutrition envelopes",()=>{
+  const data='[1]{productName,energyKcal,protein}:\n  Sample,250,12';
+  const envelope=(body)=>({content:[{type:"text",text:JSON.stringify(body)}]});
+  assert.equal(extractNutrition(envelope({success:true,data})).length,1);
+  assert.deepEqual(extractNutrition(envelope({success:false,data})),[]);
+  assert.deepEqual(extractNutrition(envelope({success:true,data:{success:false,data}})),[]);
+  assert.deepEqual(extractNutrition({isError:true,...envelope({success:true,data})}),[]);
+});
