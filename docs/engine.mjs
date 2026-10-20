@@ -4,12 +4,18 @@ function numberOrNull(value) {
   const n = typeof value === "number" ? value : Number(value);
   return Number.isFinite(n) && n >= 0 ? n : null;
 }
+// Food fields must not coerce blanks, booleans or arrays into zero-valued nutrition or prices.
+function nutritionNumberOrNull(value) {
+  if (typeof value !== "number" && typeof value !== "string") return null;
+  if (typeof value === "string" && !value.trim()) return null;
+  return numberOrNull(value);
+}
 export function normalizeFood(food) {
   if (!food || typeof food !== "object") return null;
   const name = String(food.name ?? "").trim().slice(0, 80);
-  const calories = numberOrNull(food.calories);
-  const protein = numberOrNull(food.protein);
-  const price = numberOrNull(food.price);
+  const calories = nutritionNumberOrNull(food.calories);
+  const protein = nutritionNumberOrNull(food.protein);
+  const price = nutritionNumberOrNull(food.price);
   if (!name || calories === null || protein === null) return null;
   return { id: String(food.id ?? name), name, calories, protein, price };
 }
