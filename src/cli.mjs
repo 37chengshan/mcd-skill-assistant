@@ -71,9 +71,13 @@ export async function run(args = process.argv.slice(2)) {
     }, null, 2));
   });
 }
+// Never print untrusted SDK/server error text: it can contain arbitrary credentials.
+export function safeCliFailure(_error) {
+  return "运行失败：请检查本机网络、MCP 授权与输入；为保护凭证，不显示原始错误详情。";
+}
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   run().catch(error => {
-    console.error("运行失败：" + error.message.replace(/Bearer\s+\S+/gi, "Bearer [REDACTED]"));
+    console.error(safeCliFailure(error));
     process.exitCode = 1;
   });
 }
